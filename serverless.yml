@@ -1,0 +1,79 @@
+# NOTE: update this with your service name
+service: minions-backend
+
+# Create an optimized package for our functions
+package:
+  individually: true
+
+plugins:
+  - serverless-bundle # Package our functions with Webpack
+  - serverless-offline
+  - serverless-dotenv-plugin # Load .env as environment variables
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: us-east-1
+  # These environment variables are made available to our functions
+  # under process.env.
+  environment:
+    tableName: products
+
+  # 'iamRoleStatements' defines the permission policy for the Lambda function.
+  # In this case Lambda functions are granted with permissions to access DynamoDB.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+
+functions:
+  checkData:
+    handler: checkData.main
+  updateItems:
+    handler: updateItems.main
+    timeout: 60
+
+stepFunctions:
+  stateMachines:
+    scrapper:
+      events:
+        - schedule:
+            rate: rate(20 hours)
+      name: Scrapper
+      definition:
+        Comment: "Populating dynamoDB with scrapped data"
+        StartAt: CheckData
+        States:
+          CheckData:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [checkData, Arn]
+            Next: isThereNewData
+          isThereNewData:
+            Type: Choice
+            Choices:
+              - Variable: "$.isNewData"
+                BooleanEquals: true
+                Next: UpdateItems
+              - Variable: "$.isNewData"
+                BooleanEquals: false
+                Next: FinishStep
+            Default: FinishStep
+          UpdateItems:
+            Type: Task
+            Resource:
+              Fn::GetAtt: [updateItems, Arn]
+            End: true
+          FinishStep:
+            Type: Fail
+            Cause: "No new data"
