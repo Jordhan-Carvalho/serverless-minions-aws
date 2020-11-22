@@ -26,7 +26,7 @@ export const main = async (event, context, callback) => {
     });
 
     const params = {
-      TableName: process.env.tableName,
+      TableName: process.env.prodTable,
       Item: {
         amzId: prod.id,
         title: $('span[id="productTitle"]').text().trim(),

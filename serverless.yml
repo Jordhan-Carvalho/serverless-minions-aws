@@ -1,4 +1,3 @@
-# NOTE: update this with your service name
 service: minions-backend
 
 # Create an optimized package for our functions
@@ -17,13 +16,9 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: us-east-1
-  # These environment variables are made available to our functions
-  # under process.env.
   environment:
-    tableName: products
-
-  # 'iamRoleStatements' defines the permission policy for the Lambda function.
-  # In this case Lambda functions are granted with permissions to access DynamoDB.
+    prodTable: products
+    orderTable: orders
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -42,6 +37,34 @@ functions:
   updateItems:
     handler: updateItems.main
     timeout: 60
+  listMinions:
+    handler: listMinions.main
+    events:
+      - http:
+          path: minions
+          method: get
+          cors: true
+  getMinion:
+    handler: getMinion.main
+    events:
+      - http:
+          path: minions/{id}
+          method: get
+          cors: true
+  listOrders:
+    handler: listOrders.main
+    events:
+      - http:
+          path: orders
+          method: get
+          cors: true
+  createOrder:
+    handler: createOrder.main
+    events:
+      - http:
+          path: orders
+          method: post
+          cors: true
 
 stepFunctions:
   stateMachines:
@@ -64,16 +87,19 @@ stepFunctions:
             Choices:
               - Variable: "$.isNewData"
                 BooleanEquals: true
-                Next: UpdateItems
+                Next: Yes
               - Variable: "$.isNewData"
                 BooleanEquals: false
-                Next: FinishStep
-            Default: FinishStep
+                Next: No
+            Default: No
+          Yes:
+            Type: Pass
+            Next: UpdateItems
+          No:
+            Type: Pass
+            End: true
           UpdateItems:
             Type: Task
             Resource:
               Fn::GetAtt: [updateItems, Arn]
             End: true
-          FinishStep:
-            Type: Fail
-            Cause: "No new data"

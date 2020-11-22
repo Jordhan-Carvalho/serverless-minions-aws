@@ -1,0 +1,8 @@
+{
+  "body": "{\"prodTitle\":\"Biruru\",\"prodId\":\"BLF0SDSD9\",\"prodPrice\":\"$25.75\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

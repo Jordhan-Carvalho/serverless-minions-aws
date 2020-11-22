@@ -24,7 +24,7 @@ export const main = async (event, context, callback) => {
 
   for (let prod of scrappedProds) {
     const params = {
-      TableName: process.env.tableName,
+      TableName: process.env.prodTable,
       Key: {
         amzId: prod.id,
       },
