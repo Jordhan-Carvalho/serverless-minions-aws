@@ -30,6 +30,11 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:DescribeTable
       Resource: "arn:aws:dynamodb:us-east-1:*:*"
+    - Effect: Allow
+      Action:
+        - sns:*
+      Resource:
+        - "*"
 
 functions:
   checkData:
@@ -37,6 +42,13 @@ functions:
   updateItems:
     handler: updateItems.main
     timeout: 60
+  signUpConfirm:
+    handler: signUpConfirm.main
+    events:
+      - cognitoUserPool:
+          pool: minions-user-pool
+          trigger: PreSignUp
+          existing: true
   listMinions:
     handler: listMinions.main
     events:
