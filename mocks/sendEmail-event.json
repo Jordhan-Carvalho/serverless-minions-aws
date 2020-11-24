@@ -1,0 +1,8 @@
+{
+  "body": "{\"to\":\"carvalho@jordhan.dev\",\"from\":\"carvalho@jordhan.dev\",\"text\":\"testandooo\",\"subject\":\"testing\"}",
+  "requestContext": {
+    "identity": {
+      "cognitoIdentityId": "USER-SUB-1234"
+    }
+  }
+}

@@ -32,9 +32,8 @@ provider:
       Resource: "arn:aws:dynamodb:us-east-1:*:*"
     - Effect: Allow
       Action:
-        - sns:*
-      Resource:
-        - "*"
+        - ses:*
+      Resource: "*"
 
 functions:
   checkData:
@@ -56,6 +55,7 @@ functions:
           path: minions
           method: get
           cors: true
+          authorizer: aws_iam
   getMinion:
     handler: getMinion.main
     events:
@@ -63,6 +63,7 @@ functions:
           path: minions/{id}
           method: get
           cors: true
+          authorizer: aws_iam
   listOrders:
     handler: listOrders.main
     events:
@@ -76,6 +77,14 @@ functions:
     events:
       - http:
           path: orders
+          method: post
+          cors: true
+          authorizer: aws_iam
+  sendEmail:
+    handler: sendEmail.main
+    events:
+      - http:
+          path: send-email
           method: post
           cors: true
           authorizer: aws_iam

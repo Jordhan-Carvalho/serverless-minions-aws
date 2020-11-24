@@ -15,6 +15,7 @@ export async function main(event, context) {
       prodTitle: data.prodTitle,
       prodId: data.prodId,
       prodPrice: data.prodPrice,
+      prodPicture: data.prodPicture,
       createdAt: Date.now(),
     },
   };
