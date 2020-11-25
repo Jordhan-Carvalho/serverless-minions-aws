@@ -37,9 +37,9 @@ provider:
 
 functions:
   checkData:
-    handler: checkData.main
+    handler: services/functions/checkData.main
   updateItems:
-    handler: updateItems.main
+    handler: services/functions/updateItems.main
     timeout: 60
   signUpConfirm:
     handler: signUpConfirm.main

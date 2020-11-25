@@ -4,15 +4,15 @@ const SES = new AWS.SES({ region: "us-east-1" });
 
 export const main = async (event, context) => {
   let body, statusCode;
-  const { to, from, subject, text } = JSON.parse(event.body);
+  const { toUser, toBGC, from, subject, text } = JSON.parse(event.body);
 
-  if (!to || !from || !subject || !text) {
+  if (!toUser || !toBGC || !from || !subject || !text) {
     body = { error: "All fields are required" };
     statusCode = 400;
   } else {
     const params = {
       Destination: {
-        ToAddresses: [to],
+        ToAddresses: [toUser, toBGC],
       },
       Message: {
         Body: {
@@ -24,12 +24,10 @@ export const main = async (event, context) => {
     };
 
     try {
-      const r = await SES.sendEmail(params).promise();
-      console.log("r", r);
+      await SES.sendEmail(params).promise();
       body = params;
       statusCode = 200;
     } catch (e) {
-      console.log("erro", e);
       body = { error: e.message };
       statusCode = 500;
     }

@@ -2,7 +2,7 @@ import cheerio from "cheerio";
 import axios from "axios";
 import AWS from "aws-sdk";
 
-import { headers, timer } from "./lib/scrapperUtils";
+import { headers, timer } from "../../lib/scrapperUtils";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 

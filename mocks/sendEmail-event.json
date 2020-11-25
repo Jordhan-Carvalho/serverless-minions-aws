@@ -1,5 +1,5 @@
 {
-  "body": "{\"to\":\"carvalho@jordhan.dev\",\"from\":\"carvalho@jordhan.dev\",\"text\":\"testandooo\",\"subject\":\"testing\"}",
+  "body": "{\"toUser\":\"carvalho@jordhan.dev\",\"toBGC\":\"carvalho@jordhan.dev\",\"from\":\"carvalho@jordhan.dev\",\"text\":\"testandooo\",\"subject\":\"testing\"}",
   "requestContext": {
     "identity": {
       "cognitoIdentityId": "USER-SUB-1234"
