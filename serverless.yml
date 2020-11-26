@@ -42,14 +42,14 @@ functions:
     handler: services/functions/updateItems.main
     timeout: 60
   signUpConfirm:
-    handler: signUpConfirm.main
+    handler: services/functions/signUpConfirm.main
     events:
       - cognitoUserPool:
           pool: minions-user-pool
           trigger: PreSignUp
           existing: true
   listMinions:
-    handler: listMinions.main
+    handler: services/minions-api/listMinions.main
     events:
       - http:
           path: minions
@@ -57,7 +57,7 @@ functions:
           cors: true
           authorizer: aws_iam
   getMinion:
-    handler: getMinion.main
+    handler: services/minions-api/getMinion.main
     events:
       - http:
           path: minions/{id}
@@ -65,7 +65,7 @@ functions:
           cors: true
           authorizer: aws_iam
   listOrders:
-    handler: listOrders.main
+    handler: services/orders-api/listOrders.main
     events:
       - http:
           path: orders
@@ -73,7 +73,7 @@ functions:
           cors: true
           authorizer: aws_iam
   createOrder:
-    handler: createOrder.main
+    handler: services/orders-api/createOrder.main
     events:
       - http:
           path: orders
@@ -81,7 +81,7 @@ functions:
           cors: true
           authorizer: aws_iam
   sendEmail:
-    handler: sendEmail.main
+    handler: services/mail-api/sendEmail.main
     events:
       - http:
           path: send-email
